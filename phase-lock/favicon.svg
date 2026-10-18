@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <!-- Alpha-Omega dual realm gradient -->
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0B0D17"/>
+      <stop offset="100%" stop-color="#110820"/>
+    </linearGradient>
+    <linearGradient id="hex-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00F3FF"/>
+      <stop offset="100%" stop-color="#FF007F"/>
+    </linearGradient>
+    <linearGradient id="lock-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#00F3FF"/>
+      <stop offset="100%" stop-color="#FF007F"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Dark background circle -->
+  <circle cx="32" cy="32" r="32" fill="url(#bg-grad)"/>
+
+  <!-- Hexagon outline — dual-realm gradient stroke -->
+  <!-- Flat-top hexagon: 6 points at radius 28 centered at 32,32 -->
+  <polygon
+    points="32,6 55.0,19 55.0,45 32,58 9.0,45 9.0,19"
+    fill="none"
+    stroke="url(#hex-grad)"
+    stroke-width="2.5"
+    filter="url(#glow)"
+  />
+
+  <!-- Inner thin accent ring -->
+  <polygon
+    points="32,10 51.6,21 51.6,43 32,54 12.4,43 12.4,21"
+    fill="none"
+    stroke="rgba(0,243,255,0.18)"
+    stroke-width="0.8"
+  />
+
+  <!-- Lock body (rectangle) — gradient fill -->
+  <rect x="22" y="33" width="20" height="15" rx="2.5" ry="2.5" fill="url(#lock-grad)" opacity="0.95"/>
+
+  <!-- Lock shackle (U-shape arc) -->
+  <path
+    d="M25.5,33 L25.5,26 Q25.5,20.5 32,20.5 Q38.5,20.5 38.5,26 L38.5,33"
+    fill="none"
+    stroke="url(#hex-grad)"
+    stroke-width="3.2"
+    stroke-linecap="round"
+    filter="url(#glow)"
+  />
+
+  <!-- Keyhole circle -->
+  <circle cx="32" cy="38.5" r="3" fill="#0B0D17" opacity="0.9"/>
+
+  <!-- Keyhole slot -->
+  <rect x="30.5" y="40.5" width="3" height="4.5" rx="1" fill="#0B0D17" opacity="0.9"/>
+
+  <!-- Alpha realm dot (cyan) — top left -->
+  <circle cx="14" cy="14" r="3" fill="#00F3FF" opacity="0.7" filter="url(#glow)"/>
+
+  <!-- Omega realm dot (magenta) — bottom right -->
+  <circle cx="50" cy="50" r="3" fill="#FF007F" opacity="0.7" filter="url(#glow)"/>
+</svg>

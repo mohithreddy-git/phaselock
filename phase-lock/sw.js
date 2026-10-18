@@ -3,12 +3,13 @@
  * Version 2.0.0 - Caches all 15 levels, rules engine, score calculator, and leaderboards.
  */
 
-const CACHE_NAME = 'phaselock-v2.1.0';
+const CACHE_NAME = 'phaselock-v2.2.0';
 
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
+  './favicon.svg',
   './css/style.css',
   './js/rules-engine.js',
   './js/score-calculator.js',
