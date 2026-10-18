@@ -61,7 +61,7 @@
   // View: Game Arena Elements
   const canvas = document.getElementById('game-canvas');
   const renderer = new Renderer(canvas, gameState, particles);
-  const input = new InputController(gameState, audio);
+  const input = new InputController(gameState, audio, canvas, renderer);
   const btnGameBackLevels = document.getElementById('btn-game-back-levels');
   const btnGameToWorlds = document.getElementById('btn-game-to-worlds');
   const crumbMapName = document.getElementById('crumb-map-name');

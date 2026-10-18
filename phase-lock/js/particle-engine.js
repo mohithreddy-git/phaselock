@@ -66,6 +66,41 @@ class ParticleEngine {
   }
 
   /**
+   * Spawns an interactive touch/swipe ripple under the player's finger
+   */
+  emitTouchRipple(x, y, color = '#00F3FF') {
+    if (this.reducedMotion) return;
+    this.particles.push({
+      type: 'ring',
+      x,
+      y,
+      radius: 4,
+      maxRadius: 26,
+      dr: 1.8,
+      alpha: 0.85,
+      decay: 0.045,
+      color,
+      lineWidth: 2.0
+    });
+    for (let i = 0; i < 6; i++) {
+      if (this.particles.length >= this.maxParticles) break;
+      const angle = (Math.PI * 2 * i) / 6;
+      this.particles.push({
+        type: 'spark',
+        x,
+        y,
+        vx: Math.cos(angle) * 1.4,
+        vy: Math.sin(angle) * 1.4,
+        size: 1.8,
+        alpha: 0.8,
+        decay: 0.04,
+        color,
+        glow: true
+      });
+    }
+  }
+
+  /**
    * Spawns a quantum phase ripple across the board
    */
   emitPhaseShift(x, y, fromColor = '#00F3FF', toColor = '#FF007F') {
