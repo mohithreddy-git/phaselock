@@ -190,7 +190,9 @@
         <span id="crumb-level-name" class="crumb-current">LEVEL 1: First Signal</span>
       </div>
       <div class="game-nav-actions">
-        <button id="btn-game-to-worlds" class="btn-crumb-secondary">🗺 WORLD SELECT</button>
+        <button id="btn-top-undo" class="btn-crumb-action" title="Undo Vector">↩ UNDO</button>
+        <button id="btn-top-reset" class="btn-crumb-action" title="Reset Sector">↻ RESET</button>
+        <button id="btn-game-to-worlds" class="btn-crumb-secondary">🗺 MAPS</button>
       </div>
     </div>
 
@@ -351,12 +353,31 @@
   <div id="modal-instructions" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="manual-title" aria-hidden="true">
     <div class="modal-window">
       <div class="modal-header">
-        <h2 id="manual-title" class="modal-title">TACTICAL MANUAL</h2>
+        <h2 id="manual-title" class="modal-title">COMMAND DECK & MANUAL</h2>
       </div>
       <div class="modal-body">
+        <!-- Live In-Modal Command Deck -->
+        <div class="modal-command-section">
+          <span class="section-title">SECTOR COMMAND DECK</span>
+          <div class="modal-deck-actions">
+            <button id="btn-modal-shift" class="btn-cyber btn-shift" title="Toggle active realm">
+              <span>⚡ PHASE SHIFT</span>
+              <kbd class="key-hint">SPACE / TAP POINTER</kbd>
+            </button>
+            <button id="btn-modal-undo" class="btn-cyber" title="Undo last vector">
+              <span>↩ UNDO VECTOR</span>
+              <kbd class="key-hint">U</kbd>
+            </button>
+            <button id="btn-modal-reset" class="btn-cyber" title="Restart sector">
+              <span>↻ RESET SECTOR</span>
+              <kbd class="key-hint">R</kbd>
+            </button>
+          </div>
+        </div>
+
         <div class="instruction-section">
-          <span class="section-title">01 / DUAL REALMS</span>
-          <p>You exist simultaneously across <strong>Alpha</strong> (Cyan) and <strong>Omega</strong> (Magenta). Press <strong>[SPACE]</strong> or tap Phase Shift to toggle dimensions without changing coordinates.</p>
+          <span class="section-title">01 / DUAL REALMS & TOUCH ACTIONS</span>
+          <p>You exist simultaneously across <strong>Alpha</strong> (Cyan) and <strong>Omega</strong> (Magenta). <strong>Swipe in any direction</strong> or <strong>tap grid cells</strong> to move. <strong>Tap the player pointer</strong> or <strong>double-tap</strong> anywhere to Phase Shift.</p>
         </div>
         <div class="instruction-section">
           <span class="section-title">02 / CONTAINMENT CRATES</span>

@@ -426,10 +426,36 @@ class InputController {
     bindBtn('btn-action-undo', () => this._executeUndo());
     bindBtn('btn-action-reset', () => this._executeReset());
 
-    // Mobile quick action pills
-    bindBtn('btn-mobile-shift', () => this._executePhaseShift());
-    bindBtn('btn-mobile-undo', () => this._executeUndo());
-    bindBtn('btn-mobile-reset', () => this._executeReset());
+    // Top breadcrumb quick actions
+    bindBtn('btn-top-undo', () => this._executeUndo());
+    bindBtn('btn-top-reset', () => this._executeReset());
+
+    // In-modal command deck buttons (closes modal after activating action)
+    const modalInstructions = document.getElementById('modal-instructions');
+    const closeInstructionsModal = () => {
+      if (modalInstructions && modalInstructions.classList.contains('visible')) {
+        modalInstructions.classList.remove('visible');
+        modalInstructions.setAttribute('aria-hidden', 'true');
+        this.setEnabled(true);
+      }
+    };
+
+    const bindModalBtn = (id, action) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      const handler = (e) => {
+        e.preventDefault();
+        this.audio.init();
+        action();
+        closeInstructionsModal();
+      };
+      el.addEventListener('pointerdown', handler);
+      el.addEventListener('click', handler);
+    };
+
+    bindModalBtn('btn-modal-shift', () => this._executePhaseShift());
+    bindModalBtn('btn-modal-undo', () => this._executeUndo());
+    bindModalBtn('btn-modal-reset', () => this._executeReset());
   }
 }
 
