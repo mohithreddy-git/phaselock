@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0B0D17">
+  <meta name="description" content="Phase Lock: Dual-Realm Containment Protocol. 3 Worlds, 15 Levels, Competitive Scoring, and Local Leaderboards.">
+  <title>PHASE LOCK — Dual-Realm Containment Protocol</title>
+
+  <link rel="manifest" href="./manifest.json">
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+
+  <!-- Screen reader live region for accessibility -->
+  <div id="aria-live-announcements" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- =========================================================================
+       GLOBAL APP HEADER
+       ========================================================================= -->
+  <header class="app-header" role="banner">
+    <div class="brand-section">
+      <button id="btn-header-home" class="brand-home-btn" title="Return to World Selection">
+        <span class="lock-icon">⬡</span>
+        <span class="brand-title">PHASE LOCK</span>
+      </button>
+      
+    </div>
+
+    <div class="header-center-info">
+      <!-- In-Game HUD stats (Shown only in #view-game) -->
+      <div id="game-hud-group" class="hud-stats-group" style="display: none;">
+        <div id="hud-realm" class="realm-badge realm-alpha" aria-label="Current Dimension: Alpha">
+          ALPHA
+        </div>
+        <div class="hud-stat">
+          <span class="stat-label">SECTOR</span>
+          <span id="hud-level" class="stat-val">01 / 05</span>
+        </div>
+        <div class="hud-stat">
+          <span class="stat-label">ACTIONS</span>
+          <span id="hud-actions" class="stat-val" title="Scoring Actions">0</span>
+        </div>
+        <div class="hud-stat">
+          <span class="stat-label">TIME</span>
+          <span id="hud-timer" class="stat-val">00:00</span>
+        </div>
+        <div class="hud-stat hud-stat-streak" id="hud-streak-box">
+          <span class="stat-label">STREAK</span>
+          <span id="hud-streak" class="stat-val text-success">0</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <!-- Player Callsign Pill Button -->
+      <button id="btn-profile-callsign" class="profile-badge-btn" title="Edit Local Callsign">
+        <span class="profile-icon">👤</span>
+        <span id="header-callsign-display">OPERATOR</span>
+      </button>
+      <button id="btn-audio-toggle" class="icon-btn" aria-label="Toggle Audio" title="Audio Toggle" aria-pressed="false">
+        <span id="audio-icon">🔊</span>
+      </button>
+      <button id="btn-help" class="icon-btn" aria-label="Open Mission Protocol Manual" title="Mission Manual">
+        <span>?</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       VIEW 0: ENTRANCE SCREEN (Click to Play & Credits)
+       ========================================================================= -->
+  <section id="view-entrance" class="screen-view entrance-screen active-view" aria-label="Game Entrance Screen">
+    <div class="entrance-container">
+      
+
+      <h1 class="entrance-title">PHASE LOCK</h1>
+      <p class="entrance-tagline">SHIFT REALMS · SOLVE GRIDS · MASTER CONTAINMENT</p>
+
+      <div class="entrance-action-box">
+        <button id="btn-click-to-play" class="btn-click-to-play" autofocus aria-label="Click to start Phase Lock">
+          <span class="ctp-glitch-text">CLICK TO PLAY</span>
+          <span class="ctp-sub">PRESS ANY KEY OR CLICK TO ENTER</span>
+        </button>
+      </div>
+
+      <!-- Developer Credits Box -->
+      <div class="entrance-credits-card">
+        <div class="credits-title-bar">
+          <span class="credits-icon">⚡</span>
+          <span class="credits-title">DEVELOPED BY</span>
+          <span class="credits-icon">⚡</span>
+        </div>
+        <div class="credits-list">
+          <div class="credit-item">
+            <strong class="credit-name">TEAM ARCTECH</strong>
+          </div>
+          
+        </div>
+      </div>
+
+      <div class="entrance-footer-meta">
+        <span>CTRL + PLAY HACKATHON EDITION · 100% OFFLINE</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       VIEW 1: CHOOSE A MAP (Opening Screen)
+       ========================================================================= -->
+  <section id="view-worlds" class="screen-view" style="display: none;" aria-label="Map Selection Screen">
+    <div class="worlds-hero">
+      <h1 class="hero-brand">PHASE LOCK</h1>
+      <h2 class="hero-title">CHOOSE A MAP</h2>
+      <p class="hero-subtitle">Pick a place and start playing.</p>
+    </div>
+
+    <div class="worlds-card-grid" id="worlds-grid-container">
+      <!-- Dynamically populated visual map cards (Neon City, Crystal Caves, Sky Islands) -->
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       VIEW 2: CIRCULAR LEVEL SELECTION MAP (Per World)
+       ========================================================================= -->
+  <section id="view-levels" class="screen-view" style="display: none;" aria-label="Level Progression Map">
+    <div class="levels-header-bar">
+      <button id="btn-levels-back-worlds" class="btn-nav-back" title="Return to Map Selection">
+        <span>◀</span> MAPS
+      </button>
+      <div class="levels-map-info">
+        <h2 id="levels-map-title" class="levels-map-name">NEON CITY</h2>
+        <span id="levels-map-subtitle" class="levels-map-theme">Bright streets and hidden paths</span>
+      </div>
+      <button id="btn-open-leaderboard-from-levels" class="btn-cyber-outline" title="Open World Leaderboard">
+        <span>🏆 LEADERBOARD</span>
+      </button>
+    </div>
+
+    <!-- Circular Level Progression Map Canvas/SVG Viewport -->
+    <div class="progression-map-wrapper" id="progression-map-wrapper">
+      <div class="progression-path-canvas-area" id="progression-path-area">
+        <svg class="progression-svg-bg" id="progression-svg-bg" viewBox="0 0 900 360" preserveAspectRatio="none">
+          <!-- Winding Path & World Decor inserted via JS -->
+        </svg>
+        <div class="progression-nodes-container" id="progression-nodes-container">
+          <!-- 5 Circular Level Nodes inserted via JS -->
+        </div>
+      </div>
+
+      <!-- Selected Level Quick-Play Panel -->
+      <div class="selected-level-card" id="selected-level-card">
+        <div class="slc-header">
+          <div class="slc-badge" id="slc-badge">LEVEL 01</div>
+          <h3 class="slc-title" id="slc-title">First Street</h3>
+          <p class="slc-desc" id="slc-desc">A straight avenue divided by dimensional roadblocks</p>
+        </div>
+        <div class="slc-stats">
+          <div class="slc-stat-box">
+            <span class="slc-stat-lbl">DIFFICULTY</span>
+            <span class="slc-stat-val" id="slc-diff">Cadet</span>
+          </div>
+          <div class="slc-stat-box">
+            <span class="slc-stat-lbl">PAR MOVES</span>
+            <span class="slc-stat-val text-accent" id="slc-par">21</span>
+          </div>
+          <div class="slc-stat-box">
+            <span class="slc-stat-lbl">YOUR BEST</span>
+            <span class="slc-stat-val" id="slc-best">--</span>
+          </div>
+        </div>
+        <div class="slc-action">
+          <button id="btn-play-selected-level" class="btn-play-level-card">PLAY LEVEL ▶</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       VIEW 3: GAME ARENA
+       ========================================================================= -->
+  <section id="view-game" class="screen-view" style="display: none;" aria-label="Puzzle Gameplay Arena">
+    <div class="game-top-nav">
+      <div class="nav-breadcrumbs">
+        <button id="btn-game-back-levels" class="btn-crumb">◀ <span id="crumb-map-name">NEON DISTRICT</span></button>
+        <span class="crumb-separator">/</span>
+        <span id="crumb-level-name" class="crumb-current">LEVEL 1: First Signal</span>
+      </div>
+      <div class="game-nav-actions">
+        <button id="btn-game-to-worlds" class="btn-crumb-secondary">🗺 WORLD SELECT</button>
+      </div>
+    </div>
+
+    <div class="game-main-content">
+      <!-- Canvas Wrapper -->
+      <section class="canvas-wrapper" aria-label="Interactive Game Board Grid">
+        <canvas id="game-canvas" width="600" height="600"></canvas>
+      </section>
+
+      <!-- Sidebar: Objectives, Intel, and Command Deck -->
+      <aside class="game-sidebar">
+        <!-- Containment Objectives -->
+        <section class="panel-card" aria-label="Containment Objectives">
+          <h3 class="panel-title">
+            <span>CONTAINMENT PROTOCOL</span>
+            <span id="sidebar-accent-dot" class="accent-dot">●</span>
+          </h3>
+          <div class="objectives-list">
+            <div id="obj-plate-a" class="obj-item status-pending">
+              <span class="obj-name"><span>⌖</span> PLATE ALPHA</span>
+              <span class="obj-status">ARMING</span>
+            </div>
+            <div id="obj-plate-b" class="obj-item status-pending">
+              <span class="obj-name"><span>⌖</span> PLATE OMEGA</span>
+              <span class="obj-status">ARMING</span>
+            </div>
+            <div id="obj-exit" class="obj-item status-pending">
+              <span class="obj-name"><span>⎔</span> EXTRACTION GATE</span>
+              <span class="obj-status">SEALED</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Field Intel Box -->
+        <section class="panel-card" aria-label="Tactical Intelligence">
+          <h3 class="panel-title">
+            <span>TACTICAL INTEL</span>
+            <span class="intel-tag">PAR: <span id="intel-par-moves">21</span></span>
+          </h3>
+          <div class="intel-box" id="field-intel-text">
+            Loading sector tactical parameters...
+          </div>
+        </section>
+
+        <!-- Command Deck -->
+        <section class="panel-card" aria-label="Command Deck">
+          <h3 class="panel-title">
+            <span>COMMAND DECK</span>
+          </h3>
+          <div class="controls-deck">
+            <button id="btn-action-shift" class="btn-cyber btn-shift" title="Toggle active realm">
+              <span>PHASE SHIFT</span>
+              <kbd class="key-hint">SPACE</kbd>
+            </button>
+            <button id="btn-action-undo" class="btn-cyber" title="Undo last position">
+              <span>UNDO VECTOR</span>
+              <kbd class="key-hint">U</kbd>
+            </button>
+            <button id="btn-action-reset" class="btn-cyber" title="Restart sector attempt">
+              <span>RESET SECTOR</span>
+              <kbd class="key-hint">R</kbd>
+            </button>
+          </div>
+        </section>
+      </aside>
+    </div>
+
+    <!-- Mobile Virtual Controls -->
+    <section class="mobile-controls-bar" aria-label="Mobile Controls">
+      <div class="dpad-container">
+        <button id="btn-dpad-up" class="dpad-btn dpad-up" aria-label="Move Up">▲</button>
+        <button id="btn-dpad-left" class="dpad-btn dpad-left" aria-label="Move Left">◀</button>
+        <div class="dpad-center"></div>
+        <button id="btn-dpad-right" class="dpad-btn dpad-right" aria-label="Move Right">▶</button>
+        <button id="btn-dpad-down" class="dpad-btn dpad-down" aria-label="Move Down">▼</button>
+      </div>
+
+      <div class="touch-actions-group">
+        <button id="btn-mobile-shift" class="btn-touch-action btn-touch-shift">
+          PHASE SHIFT
+        </button>
+        <button id="btn-mobile-undo" class="btn-touch-action">
+          UNDO [U]
+        </button>
+        <button id="btn-mobile-reset" class="btn-touch-action">
+          RESET [R]
+        </button>
+      </div>
+    </section>
+  </section>
+
+  <!-- =========================================================================
+       VIEW 4: LOCAL DEVICE LEADERBOARDS
+       ========================================================================= -->
+  <section id="view-leaderboard" class="screen-view" style="display: none;" aria-label="Leaderboards Screen">
+    <div class="lb-header-bar">
+      <button id="btn-lb-back" class="btn-nav-back">
+        <span>◀</span> BACK
+      </button>
+      <div class="lb-title-group">
+        <h2 class="lb-main-title">LOCAL DEVICE LEADERBOARD</h2>
+        <span class="lb-subtitle">OFFLINE VERIFIED SCORE RECORDS</span>
+      </div>
+      <div class="lb-backup-group">
+        <button id="btn-export-records" class="btn-cyber-sm" title="Export records JSON">EXPORT</button>
+        <button id="btn-import-records" class="btn-cyber-sm" title="Import records JSON">IMPORT</button>
+        <input type="file" id="input-import-file" accept=".json" style="display: none;">
+      </div>
+    </div>
+
+    <!-- World Selector Tabs -->
+    <div class="lb-world-tabs" id="lb-world-tabs">
+      <button class="lb-world-tab active" data-map="neon">NEON DISTRICT</button>
+      <button class="lb-world-tab" data-map="quantum">QUANTUM LAB</button>
+      <button class="lb-world-tab" data-map="void">VOID NEXUS</button>
+    </div>
+
+    <!-- Level Tabs 1..5 -->
+    <div class="lb-level-pills" id="lb-level-pills">
+      <button class="lb-level-pill active" data-lvl="1">LEVEL 01</button>
+      <button class="lb-level-pill" data-lvl="2">LEVEL 02</button>
+      <button class="lb-level-pill" data-lvl="3">LEVEL 03</button>
+      <button class="lb-level-pill" data-lvl="4">LEVEL 04</button>
+      <button class="lb-level-pill" data-lvl="5">LEVEL 05</button>
+    </div>
+
+    <!-- Personal Best Highlight Card -->
+    <div class="lb-personal-card" id="lb-pb-card">
+      <!-- Populated via JS -->
+    </div>
+
+    <!-- Top 5 Local Records Table -->
+    <div class="lb-table-wrapper">
+      <table class="lb-records-table">
+        <thead>
+          <tr>
+            <th>RANK</th>
+            <th>OPERATOR</th>
+            <th>SCORE</th>
+            <th>ACTIONS</th>
+            <th>TIME</th>
+            <th>STREAK</th>
+            <th>DATE</th>
+          </tr>
+        </thead>
+        <tbody id="lb-records-tbody">
+          <!-- Populated via JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <div class="lb-footer-actions">
+      <button id="btn-reset-scores" class="btn-danger-outline">WIPE LOCAL RECORDS</button>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       MODALS & OVERLAYS
+       ========================================================================= -->
+
+  <!-- Callsign Profile Modal -->
+  <div id="modal-callsign" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="callsign-title" aria-hidden="true">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h2 id="callsign-title" class="modal-title">OPERATOR IDENTITY</h2>
+      </div>
+      <div class="modal-body">
+        <p>Set your local operational callsign for offline leaderboard records (3 to 16 alphanumeric characters):</p>
+        <div class="callsign-input-wrapper">
+          <input type="text" id="input-callsign-field" maxlength="16" placeholder="CALLSIGN" autocomplete="off" spellcheck="false">
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button id="btn-cancel-callsign" class="btn-modal-secondary">CANCEL</button>
+        <button id="btn-save-callsign" class="btn-modal-primary">CONFIRM CALLSIGN</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Instructions / Tactical Manual Modal -->
+  <div id="modal-instructions" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="manual-title" aria-hidden="true">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h2 id="manual-title" class="modal-title">TACTICAL MANUAL</h2>
+      </div>
+      <div class="modal-body">
+        <div class="instruction-section">
+          <span class="section-title">01 / DUAL REALMS</span>
+          <p>You exist simultaneously across <strong>Alpha</strong> (Cyan) and <strong>Omega</strong> (Magenta). Press <strong>[SPACE]</strong> or tap Phase Shift to toggle dimensions without changing coordinates.</p>
+        </div>
+        <div class="instruction-section">
+          <span class="section-title">02 / CONTAINMENT CRATES</span>
+          <p>Two energy blocks share spatial coordinates across both realms. Pushing in the active realm moves them globally. <em>Crates cannot enter a wall in EITHER dimension.</em></p>
+        </div>
+        <div class="instruction-section">
+          <span class="section-title">03 / PHASE SHIFT SAFETY</span>
+          <p>You cannot Phase Shift into a cell that contains a wall in the alternate dimension. Attempting so will be rejected with an audio buzz and red shockwave.</p>
+        </div>
+        <div class="instruction-section">
+          <span class="section-title">04 / EXTRACTION PROTOCOL</span>
+          <p>Position both blocks simultaneously onto the dual Pressure Plates to unlock the Extraction Gate. Step into the gate to clear the sector.</p>
+        </div>
+        <div class="instruction-section">
+          <span class="section-title">05 / COMPETITIVE SCORING</span>
+          <p>Score combines <strong>Move Efficiency</strong> (up to 700 pts vs solver Par), <strong>Time Points</strong> (up to 250 pts), and <strong>Clear Streaks</strong> (up to 250 pts). Undo [U] restores the grid without refunding spent scoring actions.</p>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button id="btn-close-instructions" class="btn-modal-primary">ENGAGE PROTOCOL</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Level Victory Modal with Automatic Per-Level Leaderboard -->
+  <div id="modal-victory" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="victory-title" aria-hidden="true">
+    <div class="modal-window victory-modal-expanded">
+      <div class="modal-header">
+        <h2 id="victory-title" class="modal-title">LEVEL COMPLETE</h2>
+      </div>
+      <div class="modal-body">
+        <div class="victory-rating-box" id="victory-stars">
+          <!-- Stars populated dynamically -->
+        </div>
+
+        <div class="victory-total-score-badge">
+          <span class="score-label">FINAL SCORE</span>
+          <span class="score-val" id="victory-score-total">0</span>
+          <span class="record-badge" id="victory-record-badge" style="display: none;">NEW PERSONAL BEST!</span>
+        </div>
+
+        <!-- Score Breakdown Grid -->
+        <div class="score-breakdown-card">
+          <div class="breakdown-row">
+            <span>Move Efficiency:</span>
+            <span id="breakdown-move-pts" class="text-accent">+0 pts</span>
+          </div>
+          <div class="breakdown-subtext">
+            Actions: <strong id="victory-actual-actions">0</strong> / Par: <strong id="victory-par-moves">0</strong>
+          </div>
+
+          <div class="breakdown-row">
+            <span>Time Bonus:</span>
+            <span id="breakdown-time-pts" class="text-accent">+0 pts</span>
+          </div>
+          <div class="breakdown-subtext">
+            Time: <strong id="victory-elapsed-time">00:00</strong> / Target: <strong id="victory-target-time">00:00</strong>
+          </div>
+
+          <div class="breakdown-row">
+            <span>Clear Streak Bonus:</span>
+            <span id="breakdown-streak-pts" class="text-success">+0 pts</span>
+          </div>
+          <div class="breakdown-subtext">
+            Consecutive Clears: <strong id="victory-streak-count">0</strong>
+          </div>
+        </div>
+
+        <p id="victory-message" class="victory-quote"></p>
+
+        <!-- Automatic Per-Level Local Leaderboard -->
+        <div class="victory-lb-container" id="victory-lb-container">
+          <div class="victory-lb-header">
+            <span class="victory-lb-title">🏆 LOCAL LEADERBOARD — <span id="victory-lb-title-name">LEVEL 01</span></span>
+            <span class="victory-lb-tag">OFFLINE TOP 5</span>
+          </div>
+          <div class="victory-lb-table-wrapper">
+            <table class="victory-lb-table">
+              <thead>
+                <tr>
+                  <th>RANK</th>
+                  <th>OPERATOR</th>
+                  <th>SCORE</th>
+                  <th>ACTIONS</th>
+                  <th>TIME</th>
+                  <th>STREAK</th>
+                </tr>
+              </thead>
+              <tbody id="victory-lb-tbody">
+                <!-- Populated dynamically via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button id="btn-victory-replay" class="btn-modal-secondary">REPLAY LEVEL</button>
+        <button id="btn-victory-levelselect" class="btn-modal-secondary">LEVEL MAP</button>
+        <button id="btn-victory-next" class="btn-modal-primary">NEXT LEVEL ▶</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- World Cleared Celebration Modal -->
+  <div id="modal-world-complete" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="world-title" aria-hidden="true">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h2 id="world-title" class="modal-title">WORLD CONTAINED</h2>
+      </div>
+      <div class="modal-body world-complete-body">
+        <div class="world-trophy-icon">🏆</div>
+        <h3 id="wc-map-name" class="world-cleared-name">NEON DISTRICT</h3>
+        <p class="world-cleared-sub">All 5 sectors stabilized across both dimensional realms.</p>
+
+        <div class="world-summary-grid">
+          <div class="ws-item">
+            <span class="ws-label">TOTAL SCORE</span>
+            <span id="wc-total-score" class="ws-val">0</span>
+          </div>
+          <div class="ws-item">
+            <span class="ws-label">SECTORS CLEARED</span>
+            <span class="ws-val">05 / 05</span>
+          </div>
+          <div class="ws-item">
+            <span class="ws-label">BEST STREAK</span>
+            <span id="wc-best-streak" class="ws-val text-success">5</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button id="btn-wc-leaderboard" class="btn-modal-secondary">LEADERBOARD</button>
+        <button id="btn-wc-worlds" class="btn-modal-primary">CHOOSE NEXT WORLD ▶</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Master Victory Modal (All 15 Levels Complete) -->
+  <div id="modal-master-complete" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="master-title" aria-hidden="true">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h2 id="master-title" class="modal-title">PHASE LOCK MASTER</h2>
+      </div>
+      <div class="modal-body text-center">
+        <div class="master-hex-badge">⬢ 15 / 15 ⬢</div>
+        <h3 class="master-headline">ALL DIMENSIONS SECURED</h3>
+        <p>You have mastered Neon District, Quantum Lab, and the Void Nexus under full containment constraints.</p>
+        <div class="grand-score-box">
+          <span class="grand-label">GRAND TOTAL SCORE</span>
+          <span id="master-grand-score" class="grand-score-val">0</span>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button id="btn-master-close" class="btn-modal-primary">RETURN TO WORLDS</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Wipe Confirmation Dialog -->
+  <div id="modal-wipe-confirm" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-window">
+      <div class="modal-header">
+        <h2 class="modal-title text-danger">CONFIRM DATA WIPE</h2>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to delete all offline local leaderboard records, personal bests, and map progress? This action cannot be undone.</p>
+      </div>
+      <div class="modal-actions">
+        <button id="btn-cancel-wipe" class="btn-modal-secondary">CANCEL</button>
+        <button id="btn-confirm-wipe" class="btn-modal-primary" style="background: var(--danger);">DELETE ALL RECORDS</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts in dependency order (Zero external runtime dependencies, works offline and over file://) -->
+  <script src="./js/rules-engine.js"></script>
+  <script src="./js/score-calculator.js"></script>
+  <script src="./js/storage-manager.js"></script>
+  <script src="./js/level-manager.js"></script>
+  <script src="./js/map-illustrations.js"></script>
+  <script src="./js/audio-synthesizer.js"></script>
+  <script src="./js/particle-engine.js"></script>
+  <script src="./js/game-state.js"></script>
+  <script src="./js/renderer.js"></script>
+  <script src="./js/input-controller.js"></script>
+  <script src="./js/main.js"></script>
+</body>
+</html>
