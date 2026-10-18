@@ -223,49 +223,85 @@ body {
 .header-actions {
   display: flex;
   align-items: center;
-  gap: 8px;
-}
-
-.profile-badge-btn {
-  background: var(--surface-elevated);
-  border: 1px solid var(--border);
-  color: var(--text-primary);
-  padding: 5px 10px;
-  border-radius: var(--radius-sm);
-  display: flex;
-  align-items: center;
   gap: 6px;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 1px;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
-.profile-badge-btn:hover {
-  border-color: var(--alpha);
-  color: #FFFFFF;
-}
-
+/* Shared glass-circle base for ALL header action buttons */
+.profile-badge-btn,
 .icon-btn {
-  background: var(--surface-elevated);
-  border: 1px solid var(--border);
+  background: rgba(20, 28, 52, 0.75);
+  border: 1px solid rgba(0, 243, 255, 0.18);
   color: var(--text-primary);
-  width: 34px;
-  height: 34px;
-  border-radius: var(--radius-sm);
+  border-radius: 50px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.9rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.22s ease;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
+.profile-badge-btn {
+  padding: 0 12px;
+  height: 34px;
+  gap: 7px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  max-width: 130px;
+}
+
+.profile-badge-btn .profile-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
+
+#header-callsign-display {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 80px;
+}
+
+.icon-btn {
+  width: 34px;
+  height: 34px;
+  font-size: 0;
+}
+
+.icon-btn svg,
+.profile-badge-btn svg {
+  display: block;
+  flex-shrink: 0;
+}
+
+.profile-badge-btn:hover,
 .icon-btn:hover {
-  border-color: var(--alpha);
+  border-color: rgba(0, 243, 255, 0.55);
+  background: rgba(0, 243, 255, 0.1);
   color: #FFFFFF;
+  box-shadow: 0 0 16px rgba(0, 243, 255, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.icon-btn.muted {
+  border-color: rgba(255, 0, 127, 0.35);
+  color: var(--omega);
+}
+
+.icon-btn.muted:hover {
+  border-color: rgba(255, 0, 127, 0.65);
+  background: rgba(255, 0, 127, 0.1);
+  box-shadow: 0 0 16px rgba(255, 0, 127, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 /* ==========================================================================
@@ -987,6 +1023,21 @@ body {
   margin-top: 2px;
   box-shadow: 0 0 8px rgba(255, 0, 127, 0.7);
 }
+
+/* Prevent edge node labels from clipping off the viewport on mobile */
+.progression-node-btn[data-lvl="1"] .node-label-plate {
+  left: 0;
+  transform: translateX(0);
+  align-items: flex-start;
+}
+
+.progression-node-btn[data-lvl="5"] .node-label-plate {
+  left: auto;
+  right: 0;
+  transform: translateX(0);
+  align-items: flex-end;
+}
+
 
 /* Selected Level Briefing Card */
 .selected-level-card {
@@ -2093,25 +2144,44 @@ body {
   }
 
   /* -------------------------------------------------------------------------
-     HEADER: NO OVERFLOW ON MOBILE
+     HEADER: NO OVERFLOW ON MOBILE - CLEAN GLASS PILLS
      ------------------------------------------------------------------------- */
   .app-header {
     padding: 6px 10px;
-    gap: 6px;
+    gap: 4px;
+    min-height: 0;
   }
 
   .brand-title {
-    font-size: 0.9rem;
+    font-size: 0.88rem;
     letter-spacing: 1px;
   }
 
-  #header-callsign-display {
-    display: none; /* Icon-only on mobile to prevent header overflow */
+  .brand-home-btn {
+    gap: 5px;
   }
 
+  /* Hide callsign text on mobile - icon-only profile button */
+  #header-callsign-display {
+    display: none;
+  }
+
+  /* Make profile button a square circle (icon-only) on mobile */
   .profile-badge-btn {
-    padding: 4px 8px;
-    min-width: 32px;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    max-width: 32px;
+  }
+
+  /* Shrink all circular icon buttons to 32px on mobile */
+  .icon-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .header-actions {
+    gap: 5px;
   }
 
   #hud-sector-box {
@@ -2259,19 +2329,59 @@ body {
   }
 
   /* -------------------------------------------------------------------------
-     MOBILE-FIRST: LEVEL SELECTION MAP (STATS HORIZONTALLY, PLAY BUTTON VERTICALLY SEPARATE)
+     MOBILE-FIRST: LEVEL SELECTION MAP - 2-TIER HEADER
      ------------------------------------------------------------------------- */
   .levels-header-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
     margin-bottom: 8px;
+    width: 100%;
   }
 
-  .levels-map-title {
-    font-size: 1.15rem;
+  /* Top row: back button on left, leaderboard on right */
+  .levels-header-bar .btn-nav-back,
+  .levels-header-bar #btn-open-leaderboard-from-levels {
+    flex-shrink: 0;
   }
 
-  .levels-map-subtitle {
+  /* Make the header-bar children lay out correctly */
+  .levels-header-bar::before {
+    content: "";
+    display: none; /* no pseudo elements needed */
+  }
+
+  /* We must restructure via a flex row wrapper — use a wrapper approach via CSS */
+  .levels-header-bar {
+    display: grid;
+    grid-template-areas:
+      "back . leaderboard"
+      "title title title";
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 4px 8px;
+    margin-bottom: 10px;
+  }
+
+  .levels-header-bar .btn-nav-back {
+    grid-area: back;
     font-size: 0.72rem;
+    padding: 6px 10px;
   }
+
+  .levels-header-bar .levels-map-info {
+    grid-area: title;
+    text-align: center;
+    padding: 4px 0 0;
+    border-top: 1px solid rgba(0, 243, 255, 0.1);
+  }
+
+  .levels-header-bar #btn-open-leaderboard-from-levels {
+    grid-area: leaderboard;
+    font-size: 0.68rem;
+    padding: 6px 10px;
+  }
+
 
   .progression-path-canvas-area {
     height: clamp(210px, 32vh, 270px);

@@ -322,11 +322,11 @@ const MapIllustrations = {
   getProgressionMapConfig(mapId) {
     // 5 Node normalized coordinates [0..100] for desktop responsive curved route
     const nodeCoords = [
-      { x: 12, y: 68 },
+      { x: 15, y: 68 },
       { x: 30, y: 32 },
       { x: 50, y: 70 },
       { x: 70, y: 30 },
-      { x: 88, y: 52 }
+      { x: 85, y: 52 }
     ];
 
     if (mapId === 'neon') {
